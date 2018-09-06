@@ -58,13 +58,13 @@ Run the commands that assign your on-premises web service URLs as Azure AD SPNs.
   
 First, gather all the URLs that you need to add in AAD. Run these commands on-premises:
   
-- Get-MapiVirtualDirectory | FL server,\*url\*
+- Get-MapiVirtualDirectory | FL server,*url*
     
-- Get-WebServicesVirtualDirectory | FL server,\*url\*
+- Get-WebServicesVirtualDirectory | FL server,*url*
     
-- **Get-ActiveSyncVirtualDirectory | FL server,\*url\***
+- **Get-ActiveSyncVirtualDirectory | FL server,*url*
     
-- Get-OABVirtualDirectory | FL server,\*url\*
+- Get-OABVirtualDirectory | FL server,*url*
     
 Ensure the URLs clients may connect to are listed as HTTPS service principal names in AAD.
   
@@ -78,11 +78,11 @@ Take note of (and screenshot for later comparison) the output of this command, w
   
 3. If you don't see your internal and external MAPI/HTTP, EWS, ActiveSync, OAB and Autodiscover records in this list, you must add them using the command below (the example URLs are '`mail.corp.contoso.com`' and '`owa.contoso.com`', but you'd **replace the example URLs with your own** ): </br>
 ```
-- $x= Get-MsolServicePrincipal -AppPrincipalId 00000002-0000-0ff1-ce00-000000000000   
-- $x.ServicePrincipalnames.Add("https://mail.corp.contoso.com/")
-- $x.ServicePrincipalnames.Add("https://owa.contoso.com/")
-- $x.ServicePrincipalnames.Add("https://eas.contoso.com/")
-- Set-MSOLServicePrincipal -AppPrincipalId 00000002-0000-0ff1-ce00-000000000000 -ServicePrincipalNames $x.ServicePrincipalNames
+$x= Get-MsolServicePrincipal -AppPrincipalId 00000002-0000-0ff1-ce00-000000000000   
+$x.ServicePrincipalnames.Add("https://mail.corp.contoso.com/")
+$x.ServicePrincipalnames.Add("https://owa.contoso.com/")
+$x.ServicePrincipalnames.Add("https://eas.contoso.com/")
+Set-MSOLServicePrincipal -AppPrincipalId 00000002-0000-0ff1-ce00-000000000000 -ServicePrincipalNames $x.ServicePrincipalNames
 ```
  
 4. Verify your new records were added by running the Get-MsolServicePrincipal command from step 2 again, and looking through the output. Compare the list / screenshot from before to the new list of SPNs (you may also screenshot the new list for your records). If you were successful, you will see the two new URLs in the list. Going by our example, the list of SPNs will now include the specific URLs  `https://mail.corp.contoso.com`  and  `https://owa.contoso.com`. 
@@ -92,10 +92,10 @@ Take note of (and screenshot for later comparison) the output of this command, w
 Now verify OAuth is properly enabled in Exchange on all of the Virtual Directories Outlook might use by running the following commands:
 
 ```
-Get-MapiVirtualDirectory | FL server,\*url\*,\*auth\* 
-Get-WebServicesVirtualDirectory | FL server,\*url\*,\*oauth\*
-Get-OABVirtualDirectory | FL server,\*url\*,\*oauth\*
-Get-AutoDiscoverVirtualDirectory | FL server,\*oauth\*
+Get-MapiVirtualDirectory | FL server,*url*,*auth* 
+Get-WebServicesVirtualDirectory | FL server,*url*,*oauth*
+Get-OABVirtualDirectory | FL server,*url*,*oauth*
+Get-AutoDiscoverVirtualDirectory | FL server,*oauth*
 ```
 
 Check the output to make sure **OAuth** is enabled on each of these VDirs, it will look something like this (and the key thing to look at is 'OAuth'); 
